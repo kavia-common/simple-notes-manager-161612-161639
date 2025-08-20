@@ -1,19 +1,28 @@
+<script lang="ts">
+  import NoteList from '$lib/components/NoteList.svelte';
+  import NoteEditor from '$lib/components/NoteEditor.svelte';
+  import { notes, selectedId, selectedNote, selectNote, deleteNote } from '$lib/notesStore';
+
+  // Using auto-subscription for Svelte stores
+  $: allNotes = $notes;
+  $: currentId = $selectedId;
+  $: current = $selectedNote;
+
+  function onSelect(id: string) {
+    selectNote(id);
+  }
+
+  function onDelete(id: string) {
+    if (confirm('Delete this note? This action cannot be undone.')) {
+      deleteNote(id);
+    }
+  }
+</script>
+
 <svelte:head>
-    <title>notes_frontend</title>
+  <title>Simple Notes</title>
+  <meta name="description" content="Create, edit, and manage notes in your browser." />
 </svelte:head>
 
-<div class="container">
-    <p>notes_frontend is being generated</p>
-</div>
-
-<style>
-    .container {
-        text-align: center;
-    }
-
-    p {
-        margin: 0;
-        font-size: 2rem;
-        color: var(--color-text-primary);
-    }
-</style>
+<NoteList notes={allNotes} selectedId={currentId} onSelect={onSelect} onDelete={onDelete} />
+<NoteEditor note={current} />
